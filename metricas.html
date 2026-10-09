@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Métricas — Radar landing</title>
+<script src="config.js"></script>
+<style>body{font:15px/1.45 system-ui,sans-serif;margin:0;padding:18px;background:#FFF2F8;color:#26123A}h1{font-size:20px}table{border-collapse:collapse;width:100%;max-width:720px;background:#fff;margin:0 0 18px}td,th{border:1px solid #eed;padding:8px;text-align:left}th{background:#FF1F8E;color:#fff}.n{text-align:right;font-variant-numeric:tabular-nums}small{color:#6b5a78}</style>
+</head><body>
+<h1>📡 Métricas da landing (contador anônimo)</h1>
+<p><small>Contagem simples e pública, sem cookies. Visitas = 1 por sessão. Conversões e público detalhado ficam no Gerenciador de Eventos da Meta quando o Pixel estiver ativo.</small></p>
+<div id="out">Carregando…</div>
+<script>
+(function(){var C=window.RADAR_CONFIG,b=C.COUNTER_BASE+'/get/'+C.COUNTER_NAMESPACE+'/';
+var btnW=['cta-hero','cta-meio','cta-faq','cta-flutuante','cta-vitrine-grupo'],btnV=['vit-explorar'];
+var cats=['destaque','casa','cozinha','beleza','tecnologia','infantil','moda'];
+var keys=['view_a','view_b','wa_a','wa_b','vit_a','vit_b','prod_a','prod_b','vit_mais','share_whatsapp','share_copy','share_native','go_whatsapp'].concat(btnW.map(function(x){return 'wa_btn_'+x}),btnV.map(function(x){return 'vit_btn_'+x}),cats.map(function(x){return 'prod_cat_'+x}));
+var extra=(new URLSearchParams(location.search).get('src')||'').split(',').filter(Boolean).map(function(s){return 'go_whatsapp_'+s});keys=keys.concat(extra);
+Promise.all(keys.map(function(k){return fetch(b+k).then(function(r){return r.ok?r.json():{value:0}}).then(function(j){return [k,Math.max(0,j.value||0)]}).catch(function(){return [k,0]})})).then(function(arr){
+var m={};arr.forEach(function(x){m[x[0]]=x[1]});function pct(a,c){return c?(100*a/c).toFixed(1)+'%':'–'}
+function row(cells,th){return '<tr>'+cells.map(function(c,i){return (th?'<th>':'<td'+(i?' class="n"':'')+'>')+c+(th?'</th>':'</td>')}).join('')+'</tr>'}
+var h='<table>'+row(['Versão','Visitas','Cliques WhatsApp','Taxa WhatsApp','Cliques Vitrine Shopee','Cliques Produtos'],1);
+['a','b'].forEach(function(v){h+=row(['Versão '+v.toUpperCase(),m['view_'+v],m['wa_'+v],pct(m['wa_'+v],m['view_'+v]),m['vit_'+v],m['prod_'+v]])});
+var tv=m.view_a+m.view_b,tw=m.wa_a+m.wa_b,tt=m.vit_a+m.vit_b;h+=row(['<b>Total</b>',tv,tw,pct(tw,tv),tt,m.prod_a+m.prod_b])+'</table>';
+h+='<table>'+row(['Produtos por categoria','Cliques'],1)+cats.map(function(x){return row([x,m['prod_cat_'+x]])}).join('')+row(['Ver mais achados',m.vit_mais])+'</table>';
+h+='<table>'+row(['Botão (WhatsApp)','Cliques'],1)+btnW.map(function(x){return row([x,m['wa_btn_'+x]])}).join('')+'</table>';
+h+='<table>'+row(['Botão (Vitrine)','Cliques'],1)+btnV.map(function(x){return row([x,m['vit_btn_'+x]])}).join('')+'</table>';
+h+='<table>'+row(['Outros','Total'],1)+['share_whatsapp','share_copy','share_native','go_whatsapp'].concat(extra).map(function(x){return row([x,m[x]])}).join('')+'</table>';
+h+='<p><small>Para ver origens do link curto, abra metricas.html?src=instagram_bio,tiktok_bio,stories (os nomes usados em go.html?src=...).</small></p>';
+document.getElementById('out').innerHTML=h})})();
+</script></body></html>
