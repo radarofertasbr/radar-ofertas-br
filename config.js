@@ -4,7 +4,7 @@
    ===================================================================== */
 window.RADAR_CONFIG = {
   /* Link oficial do grupo (NÃO alterar; todos os botões usam este link exato) */
-  WHATSAPP_URL: "https://chat.whatsapp.com/DCNVzXEuMKP0ihMwmgyDq9?s=cl&p=a&mlu=4&ilr=4",
+  WHATSAPP_URL: "https://chat.whatsapp.com/DLr1y8CotNZGa27X7BKjH1?s=cl&p=i&mlu=4&ilr=4&iam=2",
 
   /* Meta Pixel: cole aqui só os números do ID do pixel, ex.: "123456789012345".
      Vazio = pixel desligado e aviso de cookies escondido. */
